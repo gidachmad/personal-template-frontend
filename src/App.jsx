@@ -1,20 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
+import { useEffect, useState } from 'react'
+import { Outlet, useLocation } from 'react-router-dom'
+import Footer from './components/Footer'
+import Navbar from './components/Navbar'
 
 function App() {
-  const [count, setCount] = useState(0)
+  // change theme
+  const [lightTheme, setLightTheme] = useState(true)
+  const changeTheme = () => {
+    setLightTheme(!lightTheme)
+  }
+
+  // restore scroll
+  const { pathname } = useLocation()
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
 
   return (
-    <div className='min-h-screen bg-slate-800 text-slate-400 flex flex-col justify-center items-center space-y-10'>
-      <div className='w-10 aspect-square'>
-        <img src={reactLogo} alt='React Logo SPEEN' className='animate-spin' />
+    <div
+      className={`flex flex-col min-h-screen  transition-all duration-300 ${
+        lightTheme ? '' : 'dark'
+      }`}>
+      <div className='text-slate-900 dark:text-slate-100 '>
+        <div className='flex-grow flex-shrink-0 basis-auto'>
+          <Navbar changeTheme={changeTheme} lightTheme={lightTheme} />
+          <main className='pt-8 '>
+            <Outlet />
+          </main>
+        </div>
+        <Footer />
       </div>
-      <h1 className='text-3xl font-bold underline'>
-        Lets count! the count is <span className='text-5xl'>{count}</span>
-      </h1>
-      <button className='px-4 py-2 border' onClick={() => setCount(count + 1)}>
-        +1
-      </button>
     </div>
   )
 }
